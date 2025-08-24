@@ -14,7 +14,19 @@ from datetime import datetime, timezone
 import PyPDF2
 from docx import Document
 from io import BytesIO
-from emergentintegrations.llm.chat import LlmChat, UserMessage
+try:
+    from emergentintegrations.llm.chat import LlmChat, UserMessage
+except ImportError:
+    # Paket yoksa backend yine çalışsın diye stub sınıflar
+    from pydantic import BaseModel
+
+    class UserMessage(BaseModel):
+        content: str
+
+    class LlmChat:
+        async def aask(self, prompt: str) -> str:
+            return "LLM (stub): Gerçek entegrasyon eklenmedi."
+
 import asyncio
 
 
